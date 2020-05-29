@@ -35,17 +35,20 @@ body{
     align-items: center;
     font-family: 'Balsamiq Sans', cursive;
 }
-.arena-member:not(:nth-child(2)){
+.arena-member:nth-child(1),.arena-member:nth-child(4){
     position: absolute;
     width: 15px;
     height: 100px;
     background-color: #fc466b;
     border-radius: 5px;
 }
-.arena-member:nth-child(3){
+.arena-member:nth-child(2){
+    position: absolute;
+}
+.arena-member:nth-child(4){
     right: 0;
 }
-.arena-member:nth-child(2){
+.arena-member:nth-child(3){
     height: 100%;
     background-color: #fff;
     position: absolute;
