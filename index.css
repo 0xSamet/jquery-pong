@@ -8,6 +8,7 @@ body{
     display:flex;
     justify-content: center;
     align-items: center;
+    font-family: 'Balsamiq Sans', cursive;
 }
 
 #board{
@@ -33,25 +34,29 @@ body{
     display: flex;
     justify-content: center;
     align-items: center;
-    font-family: 'Balsamiq Sans', cursive;
+}
+.arena-member{
+    position: absolute;
 }
 .arena-member:nth-child(1),.arena-member:nth-child(4){
-    position: absolute;
     width: 15px;
     height: 100px;
     background-color: #fc466b;
     border-radius: 5px;
 }
-.arena-member:nth-child(2){
-    position: absolute;
-}
-.arena-member:nth-child(4){
-    right: 0;
-}
 .arena-member:nth-child(3){
     height: 100%;
     background-color: #fff;
-    position: absolute;
     left: 50%;
     transform:  translateX(-50%)
 }
+.arena-member:nth-child(5){
+    width: 100%;
+    height: 100%;
+    background-color: skyblue;
+    z-index: 6;
+    display: none;
+    justify-content: center;
+    align-items: center;
+}
+
