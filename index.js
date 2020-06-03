@@ -112,6 +112,8 @@ $(document).ready(function(){
 
     var gameLoop = setInterval(function(){
         isGameOver(player, computer);
+        computer.y += (ball.y - (computer.y + (computerDom.innerHeight() / 2 ))) * 0.2;
+        computer.draw();
         let user = (ball.x < arena.innerWidth()/2 ) ? player : computer;
         var col = new Collision(ball, user);
         if(col.check()){
@@ -126,8 +128,6 @@ $(document).ready(function(){
         ball.update();
         ball.edges();
         ball.draw();
-        computer.y += (ball.y - (computer.y + (computerDom.innerHeight() / 2 ))) * 0.2;
-        computer.draw();
         if(ball.x - ball.radius < 0){
             computer.score++;
             computerScore.html(computer.score);
@@ -138,7 +138,7 @@ $(document).ready(function(){
             userScore.html(player.score);
             ball.reset();
         }
-    },20);
+    },25);
 
     $(document).on('mousemove', function(e){
         player.y = e.clientY - arena.innerHeight() + playerDom.innerHeight();
