@@ -12,25 +12,24 @@ $(document).ready(function(){
         this.y = arena.innerHeight() / 2 - ballDom.innerHeight();
         this.velocityX = 5;
         this.velocityY = 5;
-        this.speed = 1.3;
+        this.speed = 5;
         this.radius = 25;
         this.update = function(){
-            this.x = this.x + this.velocityX * this.speed ;
-            this.y = this.y + this.velocityY * this.speed;
+            this.x = this.x + this.velocityX;
+            this.y = this.y + this.velocityY;
         }
         this.reset = function(){
+            this.speed = 5;
             this.x = arena.innerWidth() / 2 - ballDom.innerWidth();
             this.y = arena.innerHeight() / 2 - ballDom.innerHeight();
-            ball.velocityX = -this.velocityX;
-            this.speed = 1.3;
+            ball.velocityX = -this.velocityX;     
         }
         this.edges = function(){
             if(this.y < 0 || this.y > arena.innerHeight() - this.radius){
                 this.velocityY *= -1;
-                this.speed += 0.05;
             }
         }
-        this.drawBall = function(){
+        this.draw = function(){
             element.css({
                 width: this.radius,
                 height: this.radius,
@@ -55,8 +54,7 @@ $(document).ready(function(){
         }
     }
 
-    var Player = function(element, name){
-        this.name = name;
+    var Player = function(element){
         this.x = 0;
         this.y = (arena.innerHeight() / 2) - (element.innerHeight() / 2);
         this.score = 0;
@@ -85,62 +83,62 @@ $(document).ready(function(){
         }
     }
 
+    var isGameOver = function(player, computer){
+        var winner = "";
+        if(player.score === 3 || computer.score === 3){
+            if(player.score === 3){
+                winner = "oyuncu";
+            }else{
+                winner = "bilgisayar"
+            }
+            clearInterval(gameLoop);
+            $(document).off();
+            playerDom.hide();
+            computerDom.hide();
+            gameOver.css({
+                display: "flex"
+            });
+            gameOver.html("oyun bitti kazanan "+ winner);
+        }
+    }
+
     var player = new Player(playerDom);
     var computer = new Computer(computerDom);
     var ball = new Ball(ballDom);
 
     computer.draw();
     player.draw();
+    ball.draw();
 
     var gameLoop = setInterval(function(){
-        if(player.score === 3){
-            clearInterval(gameLoop);
-            $(document).off();
-            playerDom.hide();
-            computerDom.hide();
-            gameOver.css({
-                display: "flex"
-            });
-            gameOver.html("oyun bitti kazanan : player");
-        }
-        if(computer.score === 3){
-            clearInterval(gameLoop);
-            $(document).off();
-            playerDom.hide();
-            computerDom.hide();
-            gameOver.css({
-                display: "flex"
-            });
-            gameOver.html("oyun bitti kazanan : bilgisayar");
-        }
-        if(ball.x - ball.radius < 0){
-            computer.score++;
-            computerScore.html(computer.score);
-            ball.reset();
-        }else if(ball.x + ball.radius > arena.innerWidth()){
-            player.score++;
-            userScore.html(player.score);
-            ball.reset();
-        }else{
-        
-        }
-        computer.y += (ball.y - (computer.y + (computerDom.innerHeight() / 2 ))) * 0.2;
-        computer.draw();
+        isGameOver(player, computer);
         let user = (ball.x < arena.innerWidth()/2 ) ? player : computer;
         var col = new Collision(ball, user);
         if(col.check()){
-            let collidePoint = (ball.y - (player.y + 100/2));
-            collidePoint = collidePoint / (100 / 2);
+            let collidePoint = (ball.y - (player.y + (playerDom.innerHeight()/2)));
+            collidePoint = collidePoint / (playerDom.innerHeight() / 2);
             let angleRad = (Math.PI / 4) * collidePoint;
             let direction = (ball.x < arena.innerWidth() / 2) ? 1 : -1;
             ball.velocityX =  direction * ball.speed * Math.cos(angleRad);
             ball.velocityY = ball.speed * Math.sin(angleRad);
-            ball.speed = ball.speed + 0.2;
+            ball.speed += 1;
         }
         ball.update();
         ball.edges();
-        ball.drawBall();
-    },10);
+        ball.draw();
+        computer.y += (ball.y - (computer.y + (computerDom.innerHeight() / 2 ))) * 0.2;
+        computer.draw();
+        if(ball.x - ball.radius < 0){
+            computer.score++;
+            computerScore.html(computer.score);
+            ball.reset();
+        }
+        if(ball.x + ball.radius > arena.innerWidth()){
+            player.score++;
+            userScore.html(player.score);
+            ball.reset();
+        }
+    },20);
 
     $(document).on('mousemove', function(e){
         player.y = e.clientY - arena.innerHeight() + playerDom.innerHeight();
